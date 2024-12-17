@@ -1,0 +1,106 @@
+Liste Classe Serialisable :
+
+Column
+Database
+Table
+
+Liste des choses a corriger 
+insert into misy blem OK 
+a lter drop column tsy mety  OK
+alter modify column tsy mety OK
+rename table aussi tsy mety OK
+check manao index out of bounds for length 3 OKgg
+optimize meme  OK
+analyze meme erreur OK
+
+verification de delete table  OK 
+ampina delete database : dans DatabaseManager ajoute de la fonction rename OK
+delete table : dans Database manager OK
+alter table tsy misauvegarde : dans Table.java besoin de saveTable OK
+rename table tsy misauvegarde : de memem pour rename OK
+ampina rename Database : dans DatabaseManager ajout de la fonction rename database OK 
+verification de UPDATE OK 
+
+- verification de UPDATE 
+Desc: verification du traitement de where et de SET
+- IMPLEMENTATION DE L INTERFACE 
+creation d une interface pour les col row table database
+- GESTION DE UTILISATEUR
+- GESTION DES PRIVILEGES 
+- VERFIFICATION DE REPLICATION DE LA base
+- TEST DES DONNEES
+
+
+Voici un aperçu du format des requêtes pour chaque fonction dans la classe `QueryParser`. Ces requêtes suivent la syntaxe SQL courante, et les fonctions sont adaptées pour les traiter en fonction de chaque type d'opération :
+
+1. CREATE
+   - Créer une base de données :
+     CREATE DATABASE database_name;
+   - Créer une table :
+     CREATE TABLE database_name table_name (column_name column_type, ...);
+
+2. INSERT
+   - Insérer des lignes dans une table :
+     INSERT INTO database_name table_name (column1, column2, ...) VALUES (value1, value2, ...);
+
+3. SELECT
+   - Sélectionner toutes les lignes d'une table :
+     SELECT * FROM database_name table_name;
+
+4. DELETE
+   - Supprimer une base de données :
+     DELETE DATABASE database_name;
+   - Supprimer une table :
+     DELETE TABLE database_name table_name;
+   - Supprimer une ligne d'une table :
+     DELETE ROW database_name table_name ROW row_index;
+
+5. SHOW
+   - Afficher les tables d'une base de données :
+     SHOW TABLES database_name;
+   - Afficher les bases de données :
+     SHOW DATABASES;
+
+6. DESCRIBE
+   - Afficher la structure d'une table :
+     DESCRIBE database_name table_name;
+
+7. ALTER
+   - Ajouter une colonne dans une table :
+     ALTER TABLE database_name table_name ADD column_name column_type;
+   - Supprimer une colonne dans une table :
+     ALTER TABLE database_name table_name DROP column_name;
+   - Modifier une colonne dans une table :
+     ALTER TABLE database_name table_name MODIFY column_name new_type;
+
+8. RENAME
+   - Renommer une base de données :
+     RENAME DATABASE old_name new_name;
+   - Renommer une table :
+     RENAME TABLE old_name new_name DATABASE database_name;
+
+9. UPDATE
+   - Mettre à jour des lignes dans une table :
+     UPDATE database_name table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+
+10. CHECK
+   - Vérifier une table :
+     CHECK database_name table_name;
+
+11. OPTIMIZE
+   - Optimiser une table :
+     OPTIMIZE database_name table_name;
+
+12. ANALYZE
+   - Analyser une table :
+     ANALYZE database_name table_name;
+
+Explication de la structure des requêtes :
+- Nom de la base de données et de la table : Cela dépend de l'action que vous voulez effectuer, comme spécifier `database_name` ou `table_name` dans les requêtes.
+- Colonnes et valeurs : Lorsqu'on insère ou met à jour des données, les colonnes et les valeurs doivent être fournies sous forme de listes entre parenthèses.
+- Clauses spécifiques :
+  - `SET` pour les mises à jour dans les requêtes `UPDATE`.
+  - `WHERE` pour filtrer les lignes dans les requêtes `UPDATE`, `DELETE`, etc.
+  - `ADD`, `DROP`, `MODIFY` pour l'édition de colonnes dans les requêtes `ALTER`.
+  
+Cette organisation permet de traiter les requêtes SQL courantes et de les adapter à la logique du gestionnaire de base de données.
