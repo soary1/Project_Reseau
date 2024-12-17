@@ -32,19 +32,38 @@ public class Database implements Serializable {
     }
 
     // Charger les tables à partir des fichiers
-    private void loadTables() throws Exception {
-        File dbFolder = new File("databases/" + name);
-        if (dbFolder.exists() && dbFolder.isDirectory()) {
-            for (File file : dbFolder.listFiles()) {
-                if (file.getName().endsWith(".table")) {
+private void loadTables() throws Exception {
+    File dbFolder1 = new File("databases/" + name);
+    File dbFolder2 = new File("databases2/" + name);
+
+    boolean loadedFromPrimary = tryLoadFromFolder(dbFolder1);
+    if (!loadedFromPrimary) {
+        System.err.println("Failed to load tables from primary database. Attempting to load from backup...");
+        tryLoadFromFolder(dbFolder2);
+    }
+}
+
+private boolean tryLoadFromFolder(File folder) {
+    if (folder.exists() && folder.isDirectory()) {
+        for (File file : folder.listFiles()) {
+            if (file.getName().endsWith(".table")) {
+                try {
                     Table table = Table.loadFromFile(file, this);
                     if (table != null) {
                         tables.put(table.getName(), table);
                     }
+                } catch (Exception e) {
+                    System.err.println("Failed to load table from file: " + file.getName());
+                    return false;
                 }
             }
         }
+        System.out.println("Tables successfully loaded from " + folder.getAbsolutePath());
+        return true;
     }
+    return false;
+}
+
 
     // Sauvegarder toutes les tables
     public void saveAllTables() {
@@ -53,38 +72,51 @@ public class Database implements Serializable {
         }
     }
 
-    // Sauvegarder une table dans un fichier
-    public void saveTable(Table table) {
-        File dbFolder = new File("databases/" + name);
-        if (!dbFolder.exists()) {
-            dbFolder.mkdir(); // Créer le dossier si nécessaire
-        }
+// Sauvegarder une table dans un fichier
+public void saveTable(Table table) {
+    File dbFolder1 = new File("databases/" + name);
+    File dbFolder2 = new File("databases2/" + name);
 
-        File tableFile = new File(dbFolder, table.getName() + ".table");
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tableFile))) {
-            out.writeObject(table);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    if (!dbFolder1.exists()) {
+        dbFolder1.mkdirs(); // Créer le dossier si nécessaire
+    }
+    if (!dbFolder2.exists()) {
+        dbFolder2.mkdirs(); // Créer le dossier si nécessaire
     }
 
-    public void removeTable(String tableName) {
-        // Vérifier si la table existe
-        if (!tables.containsKey(tableName)) {
-            throw new IllegalArgumentException("Table '" + tableName + "' not found in database '" + name + "'.");
-        }
-    
-        // Supprimer la table de la liste des tables
-        tables.remove(tableName);
-    
-        // Supprimer le fichier associé à la table
-        File tableFile = new File("databases/" + name + "/" + tableName + ".table");
-        if (tableFile.exists() && !tableFile.delete()) {
-            throw new RuntimeException("Failed to delete file for table '" + tableName + "' in database '" + name + "'.");
-        }
-    
-        System.out.println("Table '" + tableName + "' removed successfully from database '" + name + "'.");
+    File tableFile1 = new File(dbFolder1, table.getName() + ".table");
+    File tableFile2 = new File(dbFolder2, table.getName() + ".table");
+
+    try (ObjectOutputStream out1 = new ObjectOutputStream(new FileOutputStream(tableFile1));
+         ObjectOutputStream out2 = new ObjectOutputStream(new FileOutputStream(tableFile2))) {
+        out1.writeObject(table);
+        out2.writeObject(table);
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
+
+public void removeTable(String tableName) {
+    if (!tables.containsKey(tableName)) {
+        throw new IllegalArgumentException("Table '" + tableName + "' not found in database '" + name + "'.");
+    }
+
+    tables.remove(tableName);
+
+    File tableFile1 = new File("databases/" + name + "/" + tableName + ".table");
+    File tableFile2 = new File("databases2/" + name + "/" + tableName + ".table");
+
+    if (tableFile1.exists() && !tableFile1.delete()) {
+        throw new RuntimeException("Failed to delete file for table '" + tableName + "' in database '" + name + "'.");
+    }
+    if (tableFile2.exists() && !tableFile2.delete()) {
+        throw new RuntimeException("Failed to delete file for table '" + tableName + "' in database2 '" + name + "'.");
+    }
+
+    System.out.println("Table '" + tableName + "' removed successfully from database '" + name + "' and database2.");
+}
+
     
 
 }
