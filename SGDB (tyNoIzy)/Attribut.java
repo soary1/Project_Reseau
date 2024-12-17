@@ -7,7 +7,7 @@ public class Attribut {
         this.domaine = domaine;
     }
     // loic edit this file
-    
+    // soaryyyy
     public void setNom(String nom) {
         this.nom = nom;
     }
