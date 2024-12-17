@@ -1,0 +1,376 @@
+///////////////////void main de base
+
+public static void main(String[] args) {
+
+        Attribut[] attributs1 = {
+            new Attribut("Nom", String.class),
+            new Attribut("Age", Integer.class),
+            new Attribut("EstEtudiant", Boolean.class)
+        };
+
+        Relation relation1 = new Relation("individus1",attributs1);
+
+        relation1.insererDonnees(new Object[]{"Alice", 30, true});
+        relation1.insererDonnees(new Object[]{"Bob", 25, false});
+        relation1.insererDonnees(new Object[]{"Charlie", 22, true});
+        relation1.insererDonnees(new Object[]{"Diana", 28, false});
+
+        Attribut[] attributs2 = {
+            new Attribut("Nom", String.class),
+            new Attribut("Age", Integer.class),
+            new Attribut("EstEtudiant", Boolean.class)
+        };
+        
+
+        Relation relation2 = new Relation("individus2",attributs2);
+
+        relation2.insererDonnees(new Object[]{"Eve", 35, true});
+        relation2.insererDonnees(new Object[]{"Bob", 25, false}); 
+        relation2.insererDonnees(new Object[]{"Alice", 30, true}); 
+        relation2.insererDonnees(new Object[]{"Grace", 29, true});
+
+        String[] nouveauxNoms = {"Nom", "Age", "EstEtudiant"};
+        Relation relationUnion = relation1.union(relation2, nouveauxNoms,"individus3");
+
+        System.out.println("Contenu de la relation unie :");
+        relationUnion.afficherValeurs();
+        System.out.println(" ");
+
+        String[] nouveauxNomsIntersection = {"Nom", "Age", "EstEtudiant"};
+        Relation relationIntersection = relation1.intersection(relation2, nouveauxNomsIntersection,"individus4");
+
+        System.out.println("Contenu de la relation d'intersection :");
+        relationIntersection.afficherValeurs();
+        System.out.println(" ");
+
+        String[] nouveauxNomsDifference = {"Nom", "Age", "EstEtudiant"};
+        Relation relationDifference = relation1.difference(relation2, nouveauxNomsDifference,"individus5");
+
+        System.out.println("Contenu de la relation de différence :");
+        relationDifference.afficherValeurs();
+    }
+
+
+///////////////////Void main pour test anle ensemble: 
+        Ensemble ensemble1 = new Ensemble();
+        Ensemble ensemble2 = new Ensemble();
+
+        ensemble1.ajouter("A");
+        ensemble1.ajouter("B");
+        ensemble1.ajouter(3);
+
+        ensemble2.ajouter("B");
+        ensemble2.ajouter(4);
+        ensemble2.ajouter(new Ensemble());
+
+        System.out.println("Ensemble 1: " + ensemble1);
+        System.out.println("Ensemble 2: " + ensemble2);
+        System.out.println("Union: " + ensemble1.union(ensemble2));
+        System.out.println("Intersection: " + ensemble1.intersection(ensemble2));
+        System.out.println("Différence: " + ensemble1.difference(ensemble2));
+        System.out.println("Cardinalité Ensemble 1: " + ensemble1.cardinalite());
+        System.out.println("Appartenance de 'A' à Ensemble 1: " + ensemble1.appartient("A"));
+
+        System.out.println("/////////////////////////////////////////////////////////////////////////////");
+
+
+Attribut
+    String nom: nom de l'attribut 
+    Class domaine , qui contient le type de l'attribut de type Class
+Relation
+    Attribut[] listAttribut: C'est un tableau d'attribut qui contient les types de chaque valeur 
+    Object[][] valeur: Un tableau d'Object qui contient il contient les valeurs 
+    *doit etre du meme types que la class dans le domaine dans l'Attribut 
+    class listAttribut[0] == type valeur inserer dans valeur[][0]
+
+fonction : 
+
+Attribut: declaration d'attribut par STRing nom, et type 
+Relation :
+declaration d'une relation par un un tableau d'attribut
+insertion de donne dans un valeur[] 
+
+    operations sur la class Relation:
+    definitions des domaines et des attributs:
+    afficher Relation
+    manipulation des donnes donne dans Nuplets
+
+        Union prend en argument une autre relation et un String[] 
+        qui stock les noms de nouvelles attribut 
+        - le nombre d'attribut de chaque relation doit etre egale sinon ca ne marche pas
+        - on prend le tableau des valeurs de la premiere relation 
+        et on met les valeurs de la deuscieme Relation en bas de cette derniers
+        - Pour le type de chaque nouvelles colonne, 
+        On prend le type de qui pourrait contenir les valeurs 
+        ex Relation Nom (String) Prenom (String) et Relation Nom (String) Age (int)
+        nouvelle relation apres l'union Nom(String)  Caracteristique(String) car String peut contenir un int par transformation
+        - on enleve aussi les lignes qui sont des doublons(deux lignes qui se resenmbles  chaque valeur pour les deux lignes sont egaux)  
+            
+        intersection prend argument un autre relation et un String[]
+        qui stock les noms de nouvelles attribut
+        - le nombre d'attribut de chaque relation
+        - le resultat de cette fonction est une autre relation qui contient les lignes qui se resenmbles dans chaque relation 
+        ligne qui se resenmbles: voir chaque valeur par colone (valeur[][0] de la Relation 1 si egale a valeur[][0] de la relation 2)
+        si ils sont du meme types on les compares tout de suite mais sinon on doit chercher la Class qui pourrait contenir le deux valeurs
+        ex : true (boolean) ??=  Koto(String)
+        on transforme true en String et on obtient qu'ils sont diffenrentes
+        - si toutes les valeurs d'une ligne de la relation 1 est egale a toutes les valeurs dans la relation 2 c'est qu'il se resenmbles
+        donc on peut prendre cette ligne
+        
+        diffenrenres 
+
+        /////mbola tsy vita 
+
+        projection: prend en argument une relation et un tableau de string qui contient les noms d'un ou de plusieurs attributs du relation,
+        vette fonction va retourner une relation avec que ces attributs qu on ont a donner le nom dna le tableau de string 
+        ex relation r1: nom prenom age ,
+        projection(r1 , String[] prenom age): on obtient une relation avec que les attributs prenom et age,
+        si le tableau de string contient des noms qui ne corresponde pas au nom dans la relation , on ne le compte pas
+        ex relation r2: voiture marque place
+        projection(r2, String nom marque place): on retourne juste une relation avec le nom des attributs dont les nom sont existants donc 
+        marque et place, on doit verifier et supprimer les doublons s il y en a
+
+        produit cartesien:prend en argument deux relations quelconque, elle va retourner une relation avec tout les arguments des deux relations
+        en suivant ce principe, tout d abord on va avoir une nouvelle relation qui va avoir touts les attributs des deux relations, pour les lignes
+         ou uplets il va d abord prendre une ligne dans la premiere relation et former une nouvelle ligne avec chaque ligne de la deuxieme relation
+         et ainsi de suite pour toutes les lignes de la premiere relation
+         ex r1 (Attribut A1, Attribut A2): (1,1)(1,2) , r2 (Attribut B1, Attribut B2):(a,b),(c,d)
+         produit cartesien de r1 et r2 donne : r3 (Attribut : A1,A2,B1,B2) (1,1,a,b) (1,1,c,d) (1,2,a,b) (1,2,c,d)
+
+        selection: prend en argument une relation et une string condition ex selection(Relation r1,"nom = 'Koto'")
+        cette fonction va retourner une relation avec les meme attributs mais avec des nombres de lignes diffenrentes, elle va retourner que les lignes
+        qui respecte la condition donner, tout d'abord elle va voir si le nom de l attribut donner existe dans la relation , sinon la fonction s arrette
+        et affiche que ca n existe pas, si elle existe elle va prendre le type de l attribut donner et on va aussi prendre le signe de comparaison,
+        String ou character : = , !=      Double ou int ou Date: > >= = <= <     boolean: is isnot
+        si le signe de ponctuation correspond au type qu on trouver on continue sinon on aarrete la fonction
+        ex nom = 'koto'  on continue    nom = 'koto' erreur 
+        ensuite on appelle une fonction qui verifie si une ligne respecte une condition en utilisant le signe donne dans le string et en parsent la valeur donne
+        dans le string en le type de variable correspondante du type de l attribut ex nom string on prend le string entre ' ' , int on parse en int le nombre 
+        remarque : seule les string et les character sont donne dans des ' ' , mais les autres type n'ont pas besoin de ca
+        et on boucle cette fonction pour retourner que les lignes qui respecte la condition  
+         
+        selection avec condition multiple: cette fonction va avoir le meme principe et argument que selection mais avec le String condition un peu diffenrente
+        ex selection (relation r1, "nom = 'koto' && age =  13")
+        elle va avoir plusieurs condition donne dans le string condition , et chaque condition et relier par une connecteur logique Et && , OU || 
+        au debut si une des condition donne dan le string ne respectent pas c es normes on arrette tout de suite la fonction:
+        - l attribut doit existe dans la relation
+        - le signe de comparaison doit correspondre au type de l attribut
+        String ou character : = , !=      Double ou int ou Date: > >= = <= <     boolean: is isnot
+        on doit prendre en compte la prioriter des parenthese s il y a des parenthese 
+        ex selection( relation r1, "(C1 || C2) && C3") C1 , C2 et C3 sont des condition
+        la priorite est d abord les condition dans les parenthese et on verifie le reste ensuite
+        comme la fonction selection avec une condition , selection avec condition multiple va retourner une relation avec les lignes qui reponde aux conditions
+
+        jointure naturelle: a pour argument deux relations , on verifie d abord si i ly a au moins un attribut en commun pour les deux relation
+        c est a dire si elles ont chacun un attribut avec le meme nom et type , s il   n y a aucun on arrete la fonction 
+        sinon on continue, et on fait le produit cartesien des deux relations, on ne garde que les lignes qui ont des valeur egaux
+        pour les attributs en commun des deux relations , on elimine le valeurs dupliques a la fin
+        ex relation r1 attribut A, B  valeur(1,a) (1,b) (4,a) ,relation r2 attribut A,B,D (1,a,b) (2,c,b) (4,a,a)
+        jointure naturelle donne une nouvelle relation avec attribut A B D , (1,a,b) (4,a,a)
+
+        phi jointure avec une condition: cette fonction a pour argument Deux relations et un string condition ex (relation r1, relation r2,"r1.nom = r2.nom")
+        elle va retourne une relation avec tout les argument des deux relation donne en arguments dont les lignes correspondante de chaque relation respectent
+        la condition,
+        au debut la fonction va verifie si les attributs dans la condition existent bien dans le deux relations sinon la fonction s arrete,
+        si elle existe on regarde si les types des deux arguments corresponde si elle sont egaux on continue sinon on arrete 
+        on prend ensuite le signe de comparaison et on verifie si elle correspond au type des attributs 
+        String ou character : = , !=      Double ou int ou Date: > >= = <= <     boolean: is isnot
+        si le signe ne correspond pas on arrete, ensuite on fait le produit cartesien des deux relations , et on verifie la condition pour chaque uplte 
+        
+        
+
+//////////////main test pour projection et produit cartesien
+    public static void main(String[] args) throws Exception {
+    Attribut nom = new Attribut("nom", String.class);
+    Attribut prenom = new Attribut("prenom", String.class);
+    Attribut age = new Attribut("age", Integer.class);
+    Relation r1 = new Relation("Personne", new Attribut[]{nom, prenom, age});
+    r1.insererDonnees(new Object[]{"Doe", "John", 30});
+    r1.insererDonnees(new Object[]{"Smith", "Anna", 25});
+    
+    Attribut marque = new Attribut("marque", String.class);
+    Attribut place = new Attribut("place", Integer.class);
+    Relation r2 = new Relation("Voiture", new Attribut[]{marque, place});
+    r2.insererDonnees(new Object[]{"Toyota", 4});
+    r2.insererDonnees(new Object[]{"Honda", 5});
+    
+    System.out.println("Projection de r1 sur prenom et age:");
+    Relation projectionResult = r1.projection(r1, new String[]{"prenom", "age"});
+    projectionResult.afficherValeurs();
+    
+    System.out.println("Produit Cartesien de r1 et r2:");
+    Relation produitResult = r1.produitCartesien(r1, r2);
+    produitResult.afficherValeurs();
+}
+
+
+//////////////////main test pour selection
+        
+
+        ///////////////////main test pour jointure
+        public class Main {
+    public static void main(String[] args) throws Exception {
+        Attribut[] attrR1 = { new Attribut("A", Integer.class), new Attribut("B", String.class) };
+        Relation r1 = new Relation("R1", attrR1);
+        r1.insererDonnees(new Object[]{1, "a"});
+        r1.insererDonnees(new Object[]{1, "b"});
+        r1.insererDonnees(new Object[]{4, "a"});
+    
+        Attribut[] attrR2 = { new Attribut("A", Integer.class), new Attribut("B", String.class), new Attribut("D", String.class) };
+        Relation r2 = new Relation("R2", attrR2);
+        r2.insererDonnees(new Object[]{1, "a", "b"});
+        r2.insererDonnees(new Object[]{2, "c", "b"});
+        r2.insererDonnees(new Object[]{4, "a", "a"});
+    
+        Relation rJoin = r1.jointureNaturelle( r2, "JoinResult");
+        rJoin.afficherValeurs();
+    
+        Relation rPhiJoin = r1.phiJointure( r2, "R1.A = R2.A", "PhiJoinResult");
+        rPhiJoin.afficherValeurs();
+    }
+    
+    
+}
+
+
+
+///////////////////////////////////////////void main 
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        
+        Attribut[] attributs1 = {
+            new Attribut("IdCours", String.class),
+            new Attribut("Jour", String.class),
+            new Attribut("Heure", Integer.class)
+        };
+
+        Relation CJH = new Relation("CJH", attributs1);
+        
+        Attribut[] attributs2 = {
+            new Attribut("IdCours", String.class),
+            new Attribut("IdSalle", String.class),
+        };
+
+        Relation CS = new Relation("CS", attributs2);
+        
+        Attribut[] attributs3 = {
+            new Attribut("IdEtudiant", Integer.class),
+            new Attribut("Nom", String.class),
+            new Attribut("Adresse", String.class)
+        };
+
+        Relation ENA = new Relation("ENA", attributs3);
+        
+        Attribut[] attributs4 = {
+            new Attribut("IdCours", String.class),
+            new Attribut("IdEtudiant", Integer.class),
+            new Attribut("Note", String.class)
+        };
+
+        Relation CEN = new Relation("CEN", attributs4);
+        
+        //inseretion donne
+        
+        CJH.insererDonnees(new Object[]{"Archi", "Lundi", 9});
+        CJH.insererDonnees(new Object[]{"Algo", "Ma", 9});
+        CJH.insererDonnees(new Object[]{"Algo", "Ve", 9});
+        CJH.insererDonnees(new Object[]{"Syst", "Ma", 14});
+
+        CS.insererDonnees(new Object[]{"Archi", "S1"});
+        CS.insererDonnees(new Object[]{"Algo", "S2"});
+        CS.insererDonnees(new Object[]{"Syst", "S1"});
+
+        ENA.insererDonnees(new Object[]{100, "Toto", "Nice"});
+        ENA.insererDonnees(new Object[]{200, "Tata", "Paris"});
+        ENA.insererDonnees(new Object[]{300, "Titi", "Rome"});
+
+        CEN.insererDonnees(new Object[]{"Archi", 100, "A"});
+        CEN.insererDonnees(new Object[]{"Archi", 300, "A"});
+        CEN.insererDonnees(new Object[]{"Syst", 100, "B"});
+        CEN.insererDonnees(new Object[]{"Syst", 200, "A"});
+        CEN.insererDonnees(new Object[]{"Syst", 300, "B"});
+        CEN.insererDonnees(new Object[]{"Algo", 100, "C"});
+        CEN.insererDonnees(new Object[]{"Algo", 200, "A"});
+
+        System.out.println();
+        System.out.println(" CJH ");
+        CJH.afficherValeurs();
+        System.out.println();
+        System.out.println(" CS ");
+        CS.afficherValeurs();
+        System.out.println();
+        System.out.println(" ENA ");
+        ENA.afficherValeurs();
+        System.out.println();
+        System.out.println(" CEN ");
+        CEN.afficherValeurs();
+        System.out.println();
+
+        Relation R1=ENA.projection(CJH, new String[] {"IdCours"});
+        System.out.println("\n R1 ");
+        R1.afficherValeurs();
+
+        Relation R2=ENA.projection(ENA, new String[] {"IdEtudiant"}); 
+        System.out.println("\n R2 ");
+        R2.afficherValeurs();
+
+        Relation R3=CJH.projection(CEN, new String[] {"IdCours","IdEtudiant"});
+        System.out.println("\n R3 ");
+        R3.afficherValeurs();
+        
+        Relation R7=R1.produitCartesien(R2);
+        System.out.println("\n R7 ");
+        R7.afficherValeurs();
+
+        Relation R8=R7.difference(R3, new String[] {"IdCours", "IdEtudiant"}, "R8");
+        System.out.println("\n R8 ");
+        R8.afficherValeurs();
+
+        Relation R9=CJH.projection(R3, new String[] {"IdEtudiant"});
+        System.out.println("\n R9 ");
+        R9.afficherValeurs();
+
+        Relation R10=ENA.projection(R8, new String[] {"IdEtudiant"});
+        System.out.println("\n R10 ");
+        R10.afficherValeurs();
+        
+        Relation R11=R9.difference(R10, new String[] {"IdEtudiant"}, "R11");
+        System.out.println("\n R11 ");
+        R11.afficherValeurs();
+    }
+}
+
+
+//////////////////new main 
+
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // Définir les attributs
+        Attribut[] attributs = {
+            new Attribut("nom", String.class),
+            new Attribut("age", Integer.class),
+            new Attribut("etat", Boolean.class)
+        };
+
+        // Créer une relation et insérer des données
+        Relation r1 = new Relation("Personnes", attributs);
+        r1.insererDonnees(new Object[]{"Koto", 20, true});
+        r1.insererDonnees(new Object[]{"Rana", 13, false});
+        r1.insererDonnees(new Object[]{"Koto", 22, true});
+        r1.insererDonnees(new Object[]{"Ali", 30, false});
+        r1.insererDonnees(new Object[]{"Sara", 25, true});
+
+        // Sélection simple
+        Relation selectionResultat = r1.selection("nom = 'Koto'");
+        System.out.println("Résultat de la sélection simple :");
+        selectionResultat.afficherValeurs();
+        System.out.println( );
+        // Sélection multiple avec condition complexe
+        Relation selectionMultipleResultat = r1.selectionMultiple("(nom = 'Koto' ) and age > 20 ) and etat is false");
+        System.out.println("Résultat de la sélection multiple :"); 
+        selectionMultipleResultat.afficherValeurs();
+
+    }
+}
