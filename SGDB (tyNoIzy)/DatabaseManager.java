@@ -34,6 +34,10 @@ public class DatabaseManager {
         table.updateRows(setClause, whereClause); // Délègue à la table
     }
 
+    public void hum() {
+        
+    }
+
     // Décrire une table
     public String describeTable(String dbName, String tableName) {
         // Parcours des bases de données
