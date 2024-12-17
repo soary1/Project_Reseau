@@ -6,7 +6,7 @@ public class Attribut {
         this.nom = nom;
         this.domaine = domaine;
     }
-
+    // loic edit this file
     public String getNom() {
         return nom;
     }
