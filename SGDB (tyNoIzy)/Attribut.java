@@ -7,9 +7,6 @@ public class Attribut {
         this.domaine = domaine;
     }
     // loic edit this file
-    public String getNom() {
-        return nom;
-    }
     
     public void setNom(String nom) {
         this.nom = nom;
